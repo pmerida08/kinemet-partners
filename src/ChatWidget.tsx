@@ -5,6 +5,9 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { MessageCircle, X, Send, Bot, Loader2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 // ─── CONFIGURATION ──────────────────────────────────────────────────────────
 const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL as string;
@@ -147,12 +150,12 @@ export default function ChatWidget() {
         aria-hidden={!open}
         className={`
           fixed z-[9999] flex flex-col bg-white shadow-2xl border border-slate-200
-          transition-all duration-300 ease-out
+          transition-all duration-300 ease-out w-full
           bottom-0 left-0 right-0 rounded-t-2xl
           sm:bottom-24 sm:left-auto sm:right-6 sm:w-[370px] sm:rounded-2xl sm:origin-bottom-right
-          ${open ? "opacity-100 translate-y-0 sm:scale-100 pointer-events-auto" : "opacity-100 translate-y-full sm:translate-y-0 sm:opacity-0 sm:scale-90 pointer-events-none"}
+          ${open ? "opacity-100 translate-y-0 sm:scale-100 pointer-events-auto" : "opacity-100 translate-y-[120%] sm:translate-y-0 sm:opacity-0 sm:scale-90 pointer-events-none"}
         `}
-        style={{ height: open ? "min(520px, 85dvh)" : undefined }}
+        style={{ height: "80vh", maxHeight: "520px" }}
       >
         {/* Header */}
         <div
@@ -218,7 +221,18 @@ export default function ChatWidget() {
                   msg.role === "user" ? { backgroundColor: "#ff6b00" } : {}
                 }
               >
-                {msg.content}
+                {msg.role === "user" ? (
+                  msg.content
+                ) : (
+                  <div className="prose prose-sm prose-slate max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 prose-p:leading-relaxed prose-pre:bg-slate-800 prose-pre:text-slate-100 prose-a:text-orange-600 prose-a:no-underline hover:prose-a:underline">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeRaw]}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -292,7 +306,11 @@ export default function ChatWidget() {
       <button
         onClick={handleOpen}
         aria-label="Abrir chat"
-        className="fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+        className={`fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 ${
+          open
+            ? "scale-0 opacity-0 pointer-events-none sm:scale-100 sm:opacity-100 sm:pointer-events-auto sm:hover:scale-110 sm:active:scale-95"
+            : "scale-100 opacity-100 pointer-events-auto hover:scale-110 active:scale-95"
+        }`}
         style={{ backgroundColor: "#ff6b00" }}
       >
         <MessageCircle size={26} className="text-white" />
