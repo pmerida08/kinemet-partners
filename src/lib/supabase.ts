@@ -8,12 +8,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export type Estado =
   | "Nuevo"
+  | "Confirmado"
   | "Contactado"
   | "Reunión"
-  | "Propuesta"
-  | "Negociación"
-  | "Cerrado Ganado"
-  | "Cerrado Perdido";
+  | "Finalizado";
 
 export type Prioridad = "Alta" | "Media" | "Baja";
 
@@ -25,5 +23,6 @@ export interface Cliente {
   email: string | null;
   estado: Estado;
   prioridad: Prioridad;
+  descripcion: string | null;
   created_at: string;
 }

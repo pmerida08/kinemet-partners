@@ -29,24 +29,20 @@ import {
 
 const ESTADOS: Estado[] = [
   "Nuevo",
+  "Confirmado",
   "Contactado",
   "Reunión",
-  "Propuesta",
-  "Negociación",
-  "Cerrado Ganado",
-  "Cerrado Perdido",
+  "Finalizado",
 ];
 
 const PRIORIDADES: Prioridad[] = ["Alta", "Media", "Baja"];
 
 const estadoColors: Record<Estado, string> = {
   Nuevo: "bg-slate-100 text-slate-700",
+  Confirmado: "bg-cyan-100 text-cyan-700",
   Contactado: "bg-blue-100 text-blue-700",
   Reunión: "bg-indigo-100 text-indigo-700",
-  Propuesta: "bg-amber-100 text-amber-700",
-  Negociación: "bg-orange-100 text-orange-700",
-  "Cerrado Ganado": "bg-emerald-100 text-emerald-700",
-  "Cerrado Perdido": "bg-red-100 text-red-700",
+  Finalizado: "bg-emerald-100 text-emerald-700",
 };
 
 const prioridadColors: Record<Prioridad, string> = {
@@ -62,6 +58,7 @@ const emptyForm = (): Omit<Cliente, "id" | "created_at"> => ({
   empresa: "",
   telefono: "",
   email: "",
+  descripcion: "",
   estado: "Nuevo",
   prioridad: "Media",
 });
@@ -165,6 +162,16 @@ function ClienteForm({ initial, onSave, onClose, saving }: ClienteFormProps) {
             onChange={(e) => set("email", e.target.value)}
             placeholder="juan@empresa.com"
             type="email"
+          />
+        </div>
+        <div className="col-span-2">
+          <label className={labelCls}>Descripción / Propósito</label>
+          <textarea
+            className={inputCls + " resize-none"}
+            rows={3}
+            value={form.descripcion ?? ""}
+            onChange={(e) => set("descripcion", e.target.value)}
+            placeholder="Detalles sobre el cliente, objetivo o contexto..."
           />
         </div>
         <div>
@@ -578,6 +585,7 @@ export default function CRMDashboard({ onLogout }: CRMDashboardProps) {
                       "Empresa",
                       "Teléfono",
                       "Email",
+                      "Descripción",
                       "Estado",
                       "Prioridad",
                       "Creado",
@@ -611,6 +619,12 @@ export default function CRMDashboard({ onLogout }: CRMDashboardProps) {
                       </td>
                       <td className="px-4 py-4 text-white/60 whitespace-nowrap max-w-[200px] truncate">
                         {c.email ?? "—"}
+                      </td>
+                      <td
+                        className="px-4 py-4 text-white/60 whitespace-nowrap max-w-[200px] truncate"
+                        title={c.descripcion ?? ""}
+                      >
+                        {c.descripcion ?? "—"}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
                         <span
@@ -697,6 +711,7 @@ export default function CRMDashboard({ onLogout }: CRMDashboardProps) {
               empresa: editTarget.empresa,
               telefono: editTarget.telefono,
               email: editTarget.email,
+              descripcion: editTarget.descripcion,
               estado: editTarget.estado,
               prioridad: editTarget.prioridad,
             }}
