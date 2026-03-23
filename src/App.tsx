@@ -19,6 +19,53 @@ import WorkerPortal from "./WorkerPortal";
 export default function App() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [showWorkerPortal, setShowWorkerPortal] = useState(false);
+  const [formData, setFormData] = useState({
+    nombre: "",
+    empresa: "",
+    email: "",
+    telefono: "",
+    mensaje: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError("");
+    setSubmitSuccess(false);
+
+    try {
+      const response = await fetch(import.meta.env.VITE_N8N_FORM_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      setSubmitSuccess(true);
+      setFormData({
+        nombre: "",
+        empresa: "",
+        email: "",
+        telefono: "",
+        mensaje: "",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitError(
+        "Hubo un problema al enviar tu solicitud. Por favor, inténtalo de nuevo.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -461,10 +508,7 @@ export default function App() {
               </p>
             </div>
             <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-6 sm:p-8 md:p-12 border border-slate-100">
-              <form
-                className="space-y-5 sm:space-y-8"
-                onSubmit={(e) => e.preventDefault()}
-              >
+              <form className="space-y-5 sm:space-y-8" onSubmit={handleSubmit}>
                 {/* Row 1 */}
                 <div className="grid sm:grid-cols-2 gap-5 sm:gap-8">
                   <div className="space-y-1.5 sm:space-y-2">
@@ -475,6 +519,11 @@ export default function App() {
                       className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all text-sm sm:text-base"
                       placeholder="Juan Pérez"
                       type="text"
+                      required
+                      value={formData.nombre}
+                      onChange={(e) =>
+                        setFormData({ ...formData, nombre: e.target.value })
+                      }
                     />
                   </div>
                   <div className="space-y-1.5 sm:space-y-2">
@@ -485,6 +534,10 @@ export default function App() {
                       className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all text-sm sm:text-base"
                       placeholder="Acme Corp"
                       type="text"
+                      value={formData.empresa}
+                      onChange={(e) =>
+                        setFormData({ ...formData, empresa: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -498,6 +551,11 @@ export default function App() {
                       className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all text-sm sm:text-base"
                       placeholder="juan@empresa.com"
                       type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                     />
                   </div>
                   <div className="space-y-1.5 sm:space-y-2">
@@ -508,6 +566,10 @@ export default function App() {
                       className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all text-sm sm:text-base"
                       placeholder="+34 000 000 000"
                       type="tel"
+                      value={formData.telefono}
+                      onChange={(e) =>
+                        setFormData({ ...formData, telefono: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -520,13 +582,61 @@ export default function App() {
                     className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all resize-none text-sm sm:text-base"
                     placeholder="Describa brevemente su desafío organizacional..."
                     rows={5}
+                    required
+                    value={formData.mensaje}
+                    onChange={(e) =>
+                      setFormData({ ...formData, mensaje: e.target.value })
+                    }
                   />
                 </div>
+
+                {submitSuccess && (
+                  <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm font-medium flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                    ¡Solicitud enviada con éxito! Nos pondremos en contacto
+                    pronto.
+                  </div>
+                )}
+
+                {submitError && (
+                  <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium flex items-center gap-3">
+                    <X className="w-5 h-5 text-red-500" />
+                    {submitError}
+                  </div>
+                )}
+
                 <button
-                  className="w-full bg-accent text-white py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:bg-accent/90 transition-all shadow-lg shadow-accent/20"
+                  className="w-full bg-accent text-white py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                   type="submit"
+                  disabled={isSubmitting}
                 >
-                  Enviar Solicitud
+                  {isSubmitting ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Enviando...
+                    </>
+                  ) : (
+                    "Enviar Solicitud"
+                  )}
                 </button>
                 <p className="text-center text-sm text-slate-500 font-medium">
                   Responderemos en un plazo de 24 horas.
