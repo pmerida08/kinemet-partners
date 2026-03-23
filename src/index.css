@@ -2,7 +2,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-primary: #1a202c;
+  --color-primary: #00898f;
   --color-accent: #ff6b00;
   --color-background-light: #f8fafc;
   --font-sans: "Inter", system-ui, sans-serif;

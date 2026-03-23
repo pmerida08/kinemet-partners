@@ -31,8 +31,12 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary text-white flex items-center justify-center font-black text-lg sm:text-xl rounded-lg tracking-tighter">
-                KP
+              <div className="flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  alt="Kinemet Partners Logo"
+                  className="h-10 sm:h-12 w-auto object-contain"
+                />
               </div>
               <span className="font-bold text-base sm:text-xl tracking-tight text-primary">
                 Kinemet Partners
@@ -422,7 +426,7 @@ export default function App() {
                       <span className="text-accent text-3xl sm:text-5xl font-black">
                         {stat.value}
                       </span>
-                      <span className="text-xs sm:text-sm uppercase tracking-widest text-slate-400 font-bold mt-1">
+                      <span className="text-xs sm:text-sm uppercase tracking-widest text-slate-200 font-bold mt-1">
                         {stat.label}
                       </span>
                     </div>
@@ -540,9 +544,11 @@ export default function App() {
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex flex-col items-center md:items-start gap-4 sm:gap-6">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-white text-primary flex items-center justify-center font-black text-base sm:text-lg rounded-lg tracking-tighter">
-                  KP
-                </div>
+                <img
+                  src="/logo.png"
+                  alt="Kinemet Partners Logo"
+                  className="h-9 sm:h-10 w-auto object-contain brightness-0 invert"
+                />
                 <span className="font-bold text-lg sm:text-xl tracking-tight">
                   Kinemet Partners
                 </span>
