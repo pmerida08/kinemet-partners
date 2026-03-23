@@ -553,11 +553,11 @@ export default function App() {
                   Kinemet Partners
                 </span>
               </div>
-              <p className="text-slate-400 text-sm max-w-md text-center md:text-left">
+              <p className="text-slate-200 text-sm max-w-md text-center md:text-left">
                 Impulsando el movimiento para permitir la transformación.
               </p>
             </div>
-            <div className="flex gap-6 sm:gap-8 text-sm font-medium text-slate-400">
+            <div className="flex gap-6 sm:gap-8 text-sm font-medium text-slate-200">
               <a className="hover:text-white transition-colors" href="#">
                 Política de Privacidad
               </a>
@@ -569,7 +569,7 @@ export default function App() {
               </a>
             </div>
           </div>
-          <div className="max-w-7xl mx-auto mt-10 sm:mt-16 pt-8 border-t border-white/10 text-center text-sm text-slate-500">
+          <div className="max-w-7xl mx-auto mt-10 sm:mt-16 pt-8 border-t border-white/10 text-center text-sm text-slate-300">
             <span
               onDoubleClick={() => setShowWorkerPortal(true)}
               title=""
