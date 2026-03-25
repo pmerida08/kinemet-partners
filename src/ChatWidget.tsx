@@ -20,15 +20,9 @@ interface Message {
   timestamp: Date;
 }
 
-/** Generates a stable session id that persists for the tab's lifetime */
+/** Generates a stable session id that persists for the current page view */
 function getSessionId(): string {
-  const key = "kp_chat_session_id";
-  let id = sessionStorage.getItem(key);
-  if (!id) {
-    id = `kp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-    sessionStorage.setItem(key, id);
-  }
-  return id;
+  return `kp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
 export default function ChatWidget() {
